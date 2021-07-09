@@ -11,19 +11,17 @@ from transfert import get_encryption_tool
 def generate_default_file():
   from tempfile import NamedTemporaryFile
   timestamp = datetime.now()
-  filename = "content.txt"
   with NamedTemporaryFile('w') as f:
     f.write('Fichier généré à {}'.format(timestamp.isoformat()))
     f.flush()
 
-    return generate_archive_file(f.name)
+    return generate_archive_file(f.name, "content.txt")
 
 
-def generate_archive_file(filename):
+def generate_archive_file(filename, filename_in_archive=None):
   from tempfile import NamedTemporaryFile
 
   encryption_tool = get_encryption_tool()
-
   timestamp = datetime.now()
 
   with open(filename, 'rb') as in_file:
@@ -32,7 +30,7 @@ def generate_archive_file(filename):
 
   archive_name = 'archive_{}.zip'.format(timestamp.strftime("%Y%m%d_%H%M%S"))
   with zipfile.ZipFile(archive_name, 'w') as a:
-    a.write(filename + '.enc')
+    a.write(filename + '.enc', filename_in_archive + '.enc')
   return archive_name
 
 
@@ -52,10 +50,11 @@ def main():
   company_register = argv[0]
   branch_code = argv[1]
   if len(argv) == 2:
-    filename = generate_default_file()
+    archive_name = generate_default_file()
   else:
-    filename = generate_archive_file(argv[2])
-  result = send(company_register, branch_code, filename, hubee_token)
+    filename = argv[2]
+    archive_name = generate_archive_file(filename, os.path.basename(filename))
+  result = send(company_register, branch_code, archive_name, hubee_token)
   print(result)
 
 
