@@ -38,7 +38,7 @@ def main():
   case_id = notification['caseId']
   case = get_case(case_id, hubee_token)
 
-  output_dir = 'case_{}_{}'.format(case_id, ts.strftime("%Y-%m-%-d_%H-%M-%S"))
+  output_dir = '{}_case_{}'.format(ts.strftime("%Y-%m-%-d_%H-%M-%S"), case_id)
   os.mkdir(output_dir)
 
   for attachment in case['attachments']:
