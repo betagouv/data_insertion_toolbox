@@ -4,6 +4,7 @@ import gzip
 import pandas as pd
 import os
 import sys
+from tqdm import tqdm
 import xml.etree.ElementTree as ET
 
 
@@ -33,7 +34,7 @@ def main():
     "dossier": [],
     "personne": [],
   }
-  for m in matches:
+  for m in tqdm(matches):
     start = datetime.datetime.now()
     data['path'].append(os.path.relpath(m, root_path))
     data['size'].append(os.path.getsize(m))
