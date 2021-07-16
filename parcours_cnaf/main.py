@@ -20,12 +20,13 @@ def get_meta(meta, item):
 
 def main():
   root_path = sys.argv[len(sys.argv)-1]
-  matches = glob.glob("{}/**/*.xml*".format(root_path))
+  matches = glob.glob("{}/**/*.xml*".format(root_path), recursive=True)
   ts = datetime.datetime.now()
 
   data = {
     "path": [],
     "size": [],
+    "analysis": [],
     "date": [],
     "nature": [],
     "frequence": [],
@@ -33,6 +34,7 @@ def main():
     "personne": [],
   }
   for m in matches:
+    start = datetime.datetime.now()
     data['path'].append(os.path.relpath(m, root_path))
     data['size'].append(os.path.getsize(m))
     if m.endswith('gz'):
@@ -57,10 +59,14 @@ def main():
     data['dossier'].append(ilen(dom.iter('InfosFoyerRSA')))
     data['personne'].append(ilen(dom.iter('Personne')))
 
+    end = datetime.datetime.now()
+    data['analysis'].append((end - start).total_seconds())
+
   df = pd.DataFrame.from_dict(data)
   output_path = os.path.join(root_path, 'files_summary_{}.xlsx'.format(ts.strftime("%Y-%m-%-d_%H-%M-%S")))
   df.to_excel(output_path, index=False)
   print(output_path)
+  print(df)
 
 
 if __name__ == '__main__':
