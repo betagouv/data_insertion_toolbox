@@ -64,7 +64,7 @@ def main():
     data['analysis'].append((end - start).total_seconds())
 
   df = pd.DataFrame.from_dict(data)
-  output_path = os.path.join(root_path, 'files_summary_{}.xlsx'.format(ts.strftime("%Y-%m-%-d_%H-%M-%S")))
+  output_path = os.path.join(root_path, 'files_summary_{}.xlsx'.format(ts.strftime("%Y-%m-%d_%H-%M-%S")))
   df.to_excel(output_path, index=False)
   print(output_path)
   print(df)
