@@ -21,7 +21,7 @@ def get_meta(meta, item):
 
 def main():
   root_path = sys.argv[len(sys.argv)-1]
-  matches = glob.glob("{}/**/*.xml*".format(root_path), recursive=True)
+  matches = glob.glob("{}{}**{}*.xml*".format(root_path, os.sep, os.sep), recursive=True)
   ts = datetime.datetime.now()
 
   data = {
