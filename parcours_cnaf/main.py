@@ -7,6 +7,8 @@ import sys
 from tqdm import tqdm
 import xml.etree.ElementTree as ET
 
+from cnaf_files import process, ERROR_VALUE
+
 
 def ilen(iterable):
     return sum(1 for _ in iterable)
@@ -32,7 +34,11 @@ def main():
     "nature": [],
     "frequence": [],
     "dossier": [],
+    "dossier_soumis_DD": [],
+    "dossier_erreur": [],
     "personne": [],
+    "personne_soumise_DD": [],
+    "personne_erreur": [],
   }
   for m in tqdm(matches):
     start = datetime.datetime.now()
@@ -57,8 +63,16 @@ def main():
     data['nature'].append(fnature)
     data['frequence'].append(ffrequence)
 
-    data['dossier'].append(ilen(dom.iter('InfosFoyerRSA')))
-    data['personne'].append(ilen(dom.iter('Personne')))
+    (applications, applicants) = process(dom)
+
+    data['dossier'].append(len(applications))
+    data['personne'].append(len(applicants))
+
+    data['dossier_soumis_DD'].append(len([a for a in applications if a.withRights()]))
+    data['personne_soumise_DD'].append(len([a for a in applicants if a.withRights()]))
+
+    data['dossier_erreur'].append(len([a for a in applications if a.statusCode == ERROR_VALUE]))
+    data['personne_erreur'].append(len([a for a in applicants if a.topDroitsEtDevoirs == ERROR_VALUE]))
 
     end = datetime.datetime.now()
     data['analysis'].append((end - start).total_seconds())
