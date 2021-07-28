@@ -7,7 +7,7 @@ Ce dossier contient des scripts pour faciliter l'analyse en masse des fichiers e
 Il faut installer les dépendances à partir de la commande suivante :
 
 ```bash
-pip install -r requirements.txt`
+pip install -r requirements.txt
 ```
 
 ## Lancement
