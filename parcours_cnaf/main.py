@@ -21,11 +21,43 @@ def get_meta(meta, item):
     return 'Error'
 
 
+def determine_file_list():
+  matches = sys.argv[1:]
+  if len(matches) == 1:
+    root_path = matches[0]
+    if not os.path.exists(matches[0]):
+      def glob_expr(extension, folder=True):
+        if folder:
+          prefix = "{}{}**{}".format(root_path, os.sep, os.sep)
+        else:
+          prefix = "{}".format(root_path)
+        return glob.glob("{}*{}".format(prefix, extension), recursive=True)
+
+      def glob_matches(folder=True):
+        return ([]
+          + glob_expr(".xml", folder)
+          + glob_expr(".xml.gz", folder)
+          # + glob_expr(".rcv", folder)
+          # + glob_expr(".RCV", folder)
+          )
+
+      matches = glob_matches()
+      if not len(matches):
+        matches = glob_matches(folder=False)
+
+  return matches
+
+
 def main():
-  root_path = sys.argv[len(sys.argv)-1]
-  matches_base = glob.glob("{}{}**{}*.xml".format(root_path, os.sep, os.sep), recursive=True)
-  matches_gz = glob.glob("{}{}**{}*.xml.gz".format(root_path, os.sep, os.sep), recursive=True)
-  matches = matches_base + matches_gz
+  matches = determine_file_list()
+
+  if not len(matches):
+    print('Aucune fichier à manipuler')
+    return
+  root_path = os.path.commonpath(matches)
+  if os.path.isfile(root_path):
+    root_path = os.path.dirname(root_path)
+
   ts = datetime.datetime.now()
 
   data = {

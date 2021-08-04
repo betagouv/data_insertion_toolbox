@@ -2,5 +2,6 @@ archive*.zip
 content.txt*
 *_case_*
 .env
+*.prof
 __pycache__
 .venv

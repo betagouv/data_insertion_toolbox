@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
 from pprint import pprint
 
+
 def main():
   file_path = "/home/thomas/Documents/Beta.gouv.fr/data.insertion/Fichers d'exemple/CG005.RSABEM.anonyme.xml"
   tree = ET.parse(file_path)
   root = tree.getroot()
   print(root)
+
 
 if __name__ == '__main__':
   main()
