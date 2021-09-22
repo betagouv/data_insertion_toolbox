@@ -2,6 +2,7 @@ archive*.zip
 content.txt*
 *_case_*
 .env
+.ipynb_checkpoints
 *.prof
 __pycache__
 .venv
